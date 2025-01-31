@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv').config();
 const db = require('./config/db');
+const redis = require('./config/redis');
 
 const app = express();
 
