@@ -1,6 +1,6 @@
 # BharatFD Backend
 
-A robust backend service for the BharatFD project, providing APIs and handling business logic for the application.
+This API enables managing FAQs with multilingual support. It allows users to add, retrieve, and translate FAQs dynamically using Redis caching and Google Gemini API for fast performance.
 
 ## Table of Contents
 
@@ -16,12 +16,15 @@ A robust backend service for the BharatFD project, providing APIs and handling b
   - [POST /api/deleteFAQ/:id](#4-post-apideletefaqid)
 - [Docker](#docker)
   - [Building the Docker Image](#building-the-docker-image)
+  - [Running the Docker Container](#running-the-docker-container)
+- [Scripts](#scripts)
 
 ## Features
 
-- Provides a comprehensive API for managing FAQs.
-- Handles business logic for the BharatFD application.
-- Easily deployable using Docker.
+- Multilingual FAQs: Supports multiple languages (e.g., English, Hindi, Spanish, French, Japanese).
+- WYSIWYG Editor for Answers: Rich text answers with Node-CKEditor integration.
+- API with Query Parameters: Language selection through ?lang= query parameter.
+- Caching with Redis: Enhanced performance by caching translations.
 
 ## Technologies Used
 
@@ -163,3 +166,24 @@ docker run -d -p <PORT>:<PORT> --name bharatfd_backend --env-file .env bharatfd_
 ```
 
 Replace `<PORT>` with the port number you have specified in your `.env` file.
+
+## Scripts
+
+The following scripts are available in the `package.json` file:
+
+- **test**: Runs the test suite using Jest.
+
+  ```bash
+  npm run test
+  ```
+
+- **start**: Starts the server.
+
+  ```bash
+  npm run start
+  ```
+
+- **dev**: Starts the server with Nodemon for development.
+  ```bash
+  npm run dev
+  ```
