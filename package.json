@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --verbose --runInBand"
   },
   "repository": {
     "type": "git",
@@ -19,9 +19,7 @@
   },
   "homepage": "https://github.com/iampratt/bharatfd_backend#readme",
   "dependencies": {
-    "@google-cloud/translate": "^8.5.0",
     "@google/generative-ai": "^0.21.0",
-    "@vitalets/google-translate-api": "^9.2.1",
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
@@ -29,5 +27,9 @@
     "mongoose": "^8.9.5",
     "redis": "^4.7.0",
     "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   }
 }
