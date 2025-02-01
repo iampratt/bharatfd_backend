@@ -47,6 +47,7 @@
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      margin-right: 10px;
     }
     button:hover {
       background-color: #0056b3;
@@ -79,7 +80,6 @@
       margin-bottom: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     }
-    
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -126,7 +126,8 @@
             <textarea id="question-<%= faq.id %>" name="question"><%= translation.question %></textarea><br><br>
             <label for="answer-<%= faq.id %>">Answer:</label>
             <textarea id="answer-<%= faq.id %>" name="answer"><%= translation.answer %></textarea><br><br>
-            <button type="submit">Update FAQ</button>
+            <button type="submit">Update FAQ</button><span class="dummy"></span>
+            <button type="submit" formaction="/api/deleteFAQ/<%= faq.id %>">Delete FAQ</button>
           </form>
         </li>
       <% }) %>
