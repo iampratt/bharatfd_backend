@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ Management</title>
+  <script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/inline/ckeditor.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1, h2, h3 {
+      color: #333;
+      text-align: center;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      max-width: 90%;
+      margin: 20px auto;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    textarea {
+      width: 95%;
+      height: 50px;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: vertical;
+    }
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    select {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 300px;
+      display: block;
+      margin: 0 auto;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      max-width: 75%;
+      margin: 20px auto;
+      
+    }
+    li{
+      list-style: number;
+    }
+    .faq-item {
+      background: #fff;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+    
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      InlineEditor
+        .create(document.querySelector('#question'))
+        .catch(error => {
+          console.error(error);
+        });
+      InlineEditor
+        .create(document.querySelector('#answer'))
+        .catch(error => {
+          console.error(error);
+        });
+    });
+  </script>
+</head>
+<body>
+  <h1>FAQ Management</h1>
+  
+  <form action="/api/createFAQ" method="POST" id="faqForm">
+    <label for="question">Question:</label>
+    <textarea id="question" name="question" ></textarea><br><br>
+    <label for="answer">Answer:</label>
+    <textarea id="answer" name="answer" ></textarea><br><br>
+    <button type="submit">Add FAQ</button>
+  </form>
+  
+  <h2>FAQs</h2>
+  <h3 for="displayLang">Display Language:</h3>
+  <select name="displayLang" id="displayLang" onchange="filterFAQsByLanguage()">
+    <option value="en">English</option>
+    <option value="hi">Hindi</option>
+    <option value="es">Spanish</option>
+    <option value="fr">French</option>
+    <option value="ja">Japanese</option>
+  </select><br>
+
+  <ul id="faqList">
+    <% faqs.forEach(faq => { %>
+      <% faq.translations.forEach(translation => { %>
+        <li class="faq-item" data-lang="<%= translation.lang %>">
+          <form action="/api/updateFAQ/<%= faq.id %>" method="POST" class="editFaqForm">
+            <label for="question-<%= faq.id %>">Question:</label>
+            <textarea id="question-<%= faq.id %>" name="question"><%= translation.question %></textarea><br><br>
+            <label for="answer-<%= faq.id %>">Answer:</label>
+            <textarea id="answer-<%= faq.id %>" name="answer"><%= translation.answer %></textarea><br><br>
+            <button type="submit">Update FAQ</button>
+          </form>
+        </li>
+      <% }) %>
+    <% }) %>
+  </ul>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      faqs.forEach(faq => {
+         faq.translations.forEach(translation => {
+          InlineEditor
+            .create(document.querySelector(`#question-${faq.id}`))
+            .catch(error => {
+              console.error(error);
+            });
+          InlineEditor
+            .create(document.querySelector(`#answer-${faq.id}`))
+            .catch(error => {
+              console.error(error);
+            });
+        })
+      })
+    });
+  </script>
+
+  <script>
+    function filterFAQsByLanguage() {
+      const selectedLang = document.getElementById('displayLang').value;
+      const faqItems = document.querySelectorAll('.faq-item');
+      faqItems.forEach(item => {
+        if (item.getAttribute('data-lang') === selectedLang) {
+          item.style.display = 'list-item';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      filterFAQsByLanguage();
+    });
+  </script>
+</body>
+</html>
