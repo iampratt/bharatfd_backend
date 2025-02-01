@@ -1,5 +1,4 @@
 const FAQ = require('../models/faq');
-const { translateText } = require('../utils/google_translate');
 const redisClient = require('../config/redis'); // Import Redis client from config
 
 const getFAQ = async (req, res) => {
