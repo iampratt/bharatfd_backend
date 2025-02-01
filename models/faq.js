@@ -1,16 +1,15 @@
 const mongoose = require('mongoose');
 
+const translationSchema = new mongoose.Schema({
+  lang: { type: String, required: true },
+  question: { type: String },
+  answer: { type: String },
+});
+
 const faqSchema = new mongoose.Schema(
   {
-    question: { type: String, required: true },
-    answer: { type: String, required: true },
-    translations: {
-      en: { type: String },
-      hi: { type: String },
-      ja: { type: String },
-      es: { type: String },
-      fr: { type: String },
-    },
+    uid: { type: String, required: true, unique: true },
+    translations: [translationSchema],
   },
   { timestamps: true }
 );
