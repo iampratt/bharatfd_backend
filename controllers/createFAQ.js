@@ -4,14 +4,23 @@ const {
   detectLanguage,
 } = require('../utils/google_translate');
 const { v4: uuidv4 } = require('uuid');
+const redisClient = require('../config/redis'); // Import Redis client from config
 
 const SUPPORTED_LANGUAGES = ['en', 'hi', 'es', 'fr', 'ja'];
 
 const createFAQ = async (req, res) => {
   try {
     const { question, answer } = req.body;
-    const lang = await detectLanguage(question);
     const uid = uuidv4();
+    const cacheKey = `faq:${uid}`;
+
+    const cachedFAQ = await redisClient.get(cacheKey);
+    if (cachedFAQ) {
+      return res.status(200).json(JSON.parse(cachedFAQ));
+    }
+
+    const lang = await detectLanguage(question);
+
     const translations = await Promise.all(
       SUPPORTED_LANGUAGES.map(async (language) => {
         const translatedQuestion = await translateLanguage(question, language);
@@ -24,12 +33,11 @@ const createFAQ = async (req, res) => {
       })
     );
 
-    const newFAQ = new FAQ({
-      uid,
-      translations,
-    });
-
+    const newFAQ = new FAQ({ uid, translations });
     await newFAQ.save();
+
+    await redisClient.setEx(cacheKey, 3600, JSON.stringify(newFAQ)); // Cache with UID for 1 hour
+
     res.status(201).json(newFAQ);
   } catch (error) {
     console.log(error);
