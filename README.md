@@ -2,7 +2,7 @@
 
 This API enables managing FAQs with multilingual support. It allows users to add, retrieve, and translate FAQs dynamically using Redis caching and Google Gemini API for fast performance.
 
-!('./assets/images/Screenshot 2025-02-02 at 02.56.36.png')
+![EJS View](./assets/images/Screenshot 2025-02-02 at 02.56.36.png)
 
 ## Table of Contents
 
