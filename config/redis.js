@@ -9,3 +9,5 @@ redisClient
   .catch((err) => {
     console.log(err);
   });
+
+module.exports = redisClient;
