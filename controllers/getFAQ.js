@@ -4,7 +4,8 @@ const redisClient = require('../config/redis'); // Import Redis client from conf
 
 const getFAQ = async (req, res) => {
   try {
-    const lang = req.query.lang || 'en';
+    let lang = req.query.lang || 'en';
+    lang = lang.concat('\n');
     const cacheKey = `faqs:${lang}`;
 
     const cachedFAQs = await redisClient.get(cacheKey);
@@ -14,22 +15,26 @@ const getFAQ = async (req, res) => {
 
     const faqs = await FAQ.find({});
 
-    if (lang !== 'en') {
-      for (const faq of faqs) {
+    const translatedFAQs = faqs
+      .map((faq) => {
         const translation = faq.translations.find((t) => t.lang === lang);
-        if (translation) {
-          faq.question = translation.question;
-          faq.answer = translation.answer;
-        }
-      }
-    }
+        return translation
+          ? {
+              id: faq.id,
+              question: translation.question,
+              answer: translation.answer,
+            }
+          : null;
+      })
+      .filter(Boolean);
 
-    const response = { 'Total Count': faqs.length, faqs };
+    const response = { 'Total Count': faqs.length, translatedFAQs };
 
-    await redisClient.setEx(cacheKey, 3600, JSON.stringify(response)); // Cache for 1 hour
+    await redisClient.set(cacheKey, JSON.stringify(response), { EX: 1800 });
 
     res.json(response);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Error fetching FAQs' });
   }
 };
