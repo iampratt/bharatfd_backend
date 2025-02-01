@@ -1,7 +1,7 @@
 const FAQ = require('../models/faq');
 const { translateLanguage } = require('../utils/google_translate');
 const { v4: uuidv4 } = require('uuid');
-const redisClient = require('../config/redis'); // Import Redis client from config
+const redisClient = require('../config/redis');
 
 const SUPPORTED_LANGUAGES = ['en', 'hi', 'es', 'fr', 'ja'];
 
